@@ -8,6 +8,8 @@ import {
     createBrowserRouter,
     createRoutesFromElements,
 } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min";
 import "./index.css";
 import App from "./App";
 import Homepage from "./pages/Homepage";
