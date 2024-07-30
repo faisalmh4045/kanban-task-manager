@@ -6,6 +6,7 @@ import Login from "./Login";
 import Signup from "./Signup";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
+import FilterDropdown from "./FilterDropdown";
 
 export {
     PrivateRoutes,
@@ -16,4 +17,5 @@ export {
     Signup,
     Sidebar,
     Topbar,
+    FilterDropdown,
 };
