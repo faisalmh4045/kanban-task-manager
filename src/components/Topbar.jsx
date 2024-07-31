@@ -3,6 +3,7 @@ import { toggleSidebar } from "../redux/sidebarSlice";
 import { useLocation } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import { FilterDropdown } from "./index";
+import { openModal } from "../redux/modalSlice";
 
 const Topbar = () => {
     const dispatch = useDispatch();
@@ -37,7 +38,11 @@ const Topbar = () => {
             </div>
             <div className="d-flex">
                 <FilterDropdown />
-                <Button className="ms-2" variant="secondary">
+                <Button
+                    className="ms-2"
+                    variant="secondary"
+                    onClick={() => dispatch(openModal(null))}
+                >
                     New Task
                 </Button>
             </div>

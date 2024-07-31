@@ -1,10 +1,10 @@
-
+import { TaskList } from "../components";
 
 const Completed = () => {
     return (
-        <div>
-            tasks completed page
-        </div>
+        <>
+            <TaskList status="Completed" />
+        </>
     );
 };
 

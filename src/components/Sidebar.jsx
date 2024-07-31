@@ -4,6 +4,7 @@ import authService from "../appwrite/auth";
 import { logout } from "../redux/authSlice";
 import { Button } from "react-bootstrap";
 import { closeSidebar } from "../redux/sidebarSlice";
+import { deleteTodos } from "../redux/todoSlice";
 
 const Sidebar = () => {
     const { name, email } = useSelector((state) => state.auth.userSession);
@@ -13,6 +14,7 @@ const Sidebar = () => {
     const logoutHandler = () => {
         authService.logout().then(() => {
             dispatch(logout());
+            dispatch(deleteTodos());
         });
     };
 

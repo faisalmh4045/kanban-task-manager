@@ -1,10 +1,10 @@
-
+import { TaskList } from "../components";
 
 const ReviewTask = () => {
     return (
-        <div>
-            need Review
-        </div>
+        <>
+            <TaskList status="Review" />
+        </>
     );
 };
 

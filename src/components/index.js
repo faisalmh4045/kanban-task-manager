@@ -7,6 +7,10 @@ import Signup from "./Signup";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
 import FilterDropdown from "./FilterDropdown";
+import TaskModal from "./TaskModal";
+import TaskList from "./TaskList";
+import TaskCard from "./TaskCard";
+import TaskForm from "./TaskForm";
 
 export {
     PrivateRoutes,
@@ -18,4 +22,8 @@ export {
     Sidebar,
     Topbar,
     FilterDropdown,
+    TaskModal,
+    TaskList,
+    TaskCard,
+    TaskForm,
 };

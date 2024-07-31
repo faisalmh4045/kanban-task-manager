@@ -1,9 +1,10 @@
+import { TaskList } from "../components";
 
 const Todos = () => {
     return (
-        <div>
-            todos page
-        </div>
+        <>
+            <TaskList status="Todo" />
+        </>
     );
 };
 

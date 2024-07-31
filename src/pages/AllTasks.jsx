@@ -1,9 +1,10 @@
+import { TaskList } from "../components";
 
 const AllTasks = () => {
     return (
-        <div>
-            all tasks
-        </div>
+        <>
+            <TaskList status="All" />
+        </>
     );
 };
 
