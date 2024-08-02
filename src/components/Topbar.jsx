@@ -10,6 +10,7 @@ const Topbar = () => {
     const loc = useLocation();
 
     const pathToTitleMap = {
+        "/board": "Boards",
         "/all-tasks": "All Tasks",
         "/todos": "Todos",
         "/doing": "Doing",

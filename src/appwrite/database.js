@@ -12,7 +12,15 @@ class DatabaseService {
         this.databases = new Databases(this.client);
     }
 
-    async createTodo({ title, description, date, status, priority, userId }) {
+    async createTodo({
+        title,
+        description,
+        date,
+        status,
+        priority,
+        order,
+        userId,
+    }) {
         try {
             const result = await this.databases.createDocument(
                 conf.appwriteDatabaseId,
@@ -24,6 +32,7 @@ class DatabaseService {
                     date,
                     status,
                     priority,
+                    order,
                     userId,
                 }
             );
@@ -34,7 +43,10 @@ class DatabaseService {
         }
     }
 
-    async updateTodo(id, { title, description, date, status, priority }) {
+    async updateTodo(
+        id,
+        { title, description, date, status, priority, order }
+    ) {
         try {
             const result = await this.databases.updateDocument(
                 conf.appwriteDatabaseId,
@@ -46,6 +58,7 @@ class DatabaseService {
                     date,
                     status,
                     priority,
+                    order,
                 }
             );
             return result;
@@ -74,7 +87,7 @@ class DatabaseService {
             const result = await this.databases.listDocuments(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId,
-                [Query.equal("userId", userId)]
+                [Query.equal("userId", userId), Query.orderAsc("order")]
             );
             return result;
         } catch (err) {

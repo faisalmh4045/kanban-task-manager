@@ -20,6 +20,10 @@ const Sidebar = () => {
 
     const navItems = [
         {
+            name: "Boards",
+            path: "/board",
+        },
+        {
             name: "All Tasks",
             path: "/all-tasks",
         },

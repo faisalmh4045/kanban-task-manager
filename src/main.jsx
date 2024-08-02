@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import store from "./redux/store";
@@ -22,6 +22,7 @@ import Doing from "./pages/Doing";
 import ReviewTask from "./pages/ReviewTask";
 import Completed from "./pages/Completed";
 import Profile from "./pages/Profile";
+import KanbanBoard from "./pages/KanbanBoard";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -30,6 +31,7 @@ const router = createBrowserRouter(
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<Signup />} />
             <Route path="/*" element={<PrivateRoutes />}>
+                <Route path="board" element={<KanbanBoard />} />
                 <Route path="all-tasks" element={<AllTasks />} />
                 <Route path="todos" element={<Todos />} />
                 <Route path="doing" element={<Doing />} />
@@ -42,9 +44,9 @@ const router = createBrowserRouter(
 );
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-    <React.StrictMode>
-        <Provider store={store}>
-            <RouterProvider router={router} />
-        </Provider>
-    </React.StrictMode>
+    // <React.StrictMode>
+    <Provider store={store}>
+        <RouterProvider router={router} />
+    </Provider>
+    // </React.StrictMode>
 );

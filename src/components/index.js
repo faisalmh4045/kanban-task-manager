@@ -11,6 +11,7 @@ import TaskModal from "./TaskModal";
 import TaskList from "./TaskList";
 import TaskCard from "./TaskCard";
 import TaskForm from "./TaskForm";
+import Board from "./Board/Board";
 
 export {
     PrivateRoutes,
@@ -26,4 +27,5 @@ export {
     TaskList,
     TaskCard,
     TaskForm,
+    Board,
 };

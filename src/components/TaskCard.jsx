@@ -26,13 +26,16 @@ const TaskCard = ({ todo, handleDelete }) => {
                     Edit
                 </Button>
                 <Button
-                    onClick={() => handleDelete(todo.$id)}
+                    onClick={() =>
+                        handleDelete({ id: todo.$id, status: todo.status })
+                    }
                     variant="danger"
                     size="sm"
                 >
                     Delete
                 </Button>
             </Card.Footer>
+            <span>{todo.order}</span>
         </Card>
     );
 };

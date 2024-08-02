@@ -1,41 +1,39 @@
 import { Modal } from "react-bootstrap";
 import "react-datepicker/dist/react-datepicker.css";
-import appwriteDbService from "../appwrite/database";
 import { useDispatch, useSelector } from "react-redux";
-import { setTodos } from "../redux/todoSlice";
 import { TaskForm } from "./index";
+import { handleCreateTodo } from "../helpers/handleCreateTodo";
+import { handleUpdateTodo } from "../helpers/handleUpdateTodo";
 
 const TaskModal = (props) => {
     const todos = useSelector((state) => state.todoList.todos);
+    const orderArrays = useSelector((state) => state.todoList.orderArrays);
     const todo = useSelector((state) => state.modal.data);
     const { userId } = useSelector((state) => state.auth.userSession);
     const dispatch = useDispatch();
 
     const onSubmit = async (data) => {
         props.onHide();
-
         try {
             if (todo) {
-                const document = await appwriteDbService.updateTodo(todo.$id, {
-                    ...data,
-                });
-                if (document) {
-                    const updatedTodos = todos.map((todo) =>
-                        todo.$id === document.$id ? document : todo
-                    );
-                    dispatch(setTodos(updatedTodos));
-                }
+                await handleUpdateTodo(
+                    todo,
+                    data,
+                    todos,
+                    orderArrays,
+                    dispatch
+                );
             } else {
-                const document = await appwriteDbService.createTodo({
-                    ...data,
+                await handleCreateTodo(
+                    data,
                     userId,
-                });
-                if (document) {
-                    dispatch(setTodos([...todos, document]));
-                }
+                    todos,
+                    orderArrays,
+                    dispatch
+                );
             }
-        } catch (e) {
-            console.log(e);
+        } catch (err) {
+            console.log(err);
         }
     };
 
