@@ -131,9 +131,11 @@ const TaskForm = ({ onSubmit, todo }) => {
                     </Form.Group>
                 </Col>
             </Row>
-            <Button className="mt-3" variant="primary" type="submit">
-                {todo ? "Update Task" : "Create Task"}
-            </Button>
+            <div className="d-flex justify-content-end">
+                <Button className="mt-3" variant="primary" type="submit">
+                    {todo?.$id ? "Update Task" : "Create Task"}
+                </Button>
+            </div>
         </Form>
     );
 };

@@ -1,8 +1,10 @@
+import { Button } from "react-bootstrap";
+
 const SubmitButton = ({ children, ...props }) => {
     return (
-        <button type="submit" {...props}>
+        <Button type="submit" {...props}>
             {children}
-        </button>
+        </Button>
     );
 };
 

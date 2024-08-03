@@ -16,7 +16,7 @@ const Column = ({ taskIds, todoMap, handleDeleteTodo }) => {
                 >
                     {(provided) => (
                         <div
-                            className="p-2 mb-3"
+                            className="mb-3"
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}

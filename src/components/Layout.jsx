@@ -26,12 +26,12 @@ const Layout = () => {
     }, [dispatch, userId]);
 
     return (
-        <div className="d-flex w-100">
+        <>
             <Sidebar />
-            <div
+            <main
                 className={`${
                     isopen ? "expanded-sidebar" : ""
-                } main-container position-absolute top-0 end-0 min-vh-100 p-4`}
+                } main-container position-absolute top-0 end-0 min-vh-100 pt-2`}
             >
                 <Topbar />
                 <TaskModal
@@ -39,8 +39,8 @@ const Layout = () => {
                     onHide={() => dispatch(closeModal())}
                 />
                 <Outlet />
-            </div>
-        </div>
+            </main>
+        </>
     );
 };
 

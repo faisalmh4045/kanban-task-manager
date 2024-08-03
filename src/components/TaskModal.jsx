@@ -15,7 +15,7 @@ const TaskModal = (props) => {
     const onSubmit = async (data) => {
         props.onHide();
         try {
-            if (todo) {
+            if (todo?.$id) {
                 await handleUpdateTodo(
                     todo,
                     data,
