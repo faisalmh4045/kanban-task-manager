@@ -1,5 +1,6 @@
 import appwriteDbService from "../appwrite/database";
 import { deleteTodo } from "../redux/todoSlice";
+import { toast } from "sonner";
 
 export const handleDeleteTodo = async ({
     id,
@@ -10,6 +11,8 @@ export const handleDeleteTodo = async ({
     if (!window.confirm("Are you sure you want to delete this task?")) {
         return;
     }
+
+    const toastId = toast.loading("Deleting task...");
 
     const isDeleted = await appwriteDbService.deleteTodo(id);
 
@@ -27,5 +30,13 @@ export const handleDeleteTodo = async ({
                 newTodoOrder: newTaskOrder,
             })
         );
+
+        toast.warning("Task deleted", {
+            id: toastId,
+        });
+    } else {
+        toast.error("Something went wrong", {
+            id: toastId,
+        });
     }
 };

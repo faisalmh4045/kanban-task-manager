@@ -6,6 +6,7 @@ import { login } from "../redux/authSlice";
 import { useForm } from "react-hook-form";
 import { Input, SubmitButton } from "./index";
 import { Form } from "react-bootstrap";
+import { toast } from "sonner";
 
 const Signup = () => {
     const navigate = useNavigate();
@@ -14,7 +15,7 @@ const Signup = () => {
     const {
         register,
         handleSubmit,
-        formState: { errors },
+        formState: { errors, isSubmitting },
     } = useForm();
 
     const createNewAccount = async (data) => {
@@ -28,6 +29,14 @@ const Signup = () => {
             }
         } catch (error) {
             setError(error);
+
+            if (error?.type !== "user_already_exists") {
+                const message = error?.type.replace(/_/g, " ");
+                toast.warning(message, {
+                    position: "top-center",
+                    duration: 5000,
+                });
+            }
         }
     };
 
@@ -75,7 +84,7 @@ const Signup = () => {
                             {...register("email", {
                                 required: "Email is required",
                                 validate: {
-                                    matchPatern: (value) =>
+                                    matchPattern: (value) =>
                                         /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(
                                             value
                                         ) ||
@@ -97,7 +106,9 @@ const Signup = () => {
                             })}
                         />
                         <div className="d-grid mt-4">
-                            <SubmitButton variant="dark">Sign up</SubmitButton>
+                            <SubmitButton variant="dark" loading={isSubmitting}>
+                                Sign up
+                            </SubmitButton>
                         </div>
                     </Form>
                     <div className="mt-3 text-secondary">

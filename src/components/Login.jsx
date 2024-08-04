@@ -6,6 +6,7 @@ import authService from "../appwrite/auth";
 import { useForm } from "react-hook-form";
 import { Input, SubmitButton } from "./index";
 import { Form } from "react-bootstrap";
+import { toast } from "sonner";
 
 const Login = () => {
     const dispatch = useDispatch();
@@ -14,7 +15,7 @@ const Login = () => {
     const {
         register,
         handleSubmit,
-        formState: { errors },
+        formState: { errors, isSubmitting },
     } = useForm();
 
     const login = async (data) => {
@@ -28,6 +29,14 @@ const Login = () => {
             }
         } catch (err) {
             setError(err);
+
+            if (err?.type !== "user_invalid_credentials") {
+                const message = err?.type.replace(/_/g, " ");
+                toast.warning(message, {
+                    position: "top-center",
+                    duration: 5000,
+                });
+            }
         }
     };
 
@@ -67,7 +76,7 @@ const Login = () => {
                             {...register("email", {
                                 required: "Email is required",
                                 validate: {
-                                    matchPatern: (value) =>
+                                    matchPattern: (value) =>
                                         /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(
                                             value
                                         ) ||
@@ -93,7 +102,9 @@ const Login = () => {
                             <small>Forgot password?</small>
                         </p>
                         <div className="d-grid">
-                            <SubmitButton variant="dark">Login</SubmitButton>
+                            <SubmitButton variant="dark" loading={isSubmitting}>
+                                Login
+                            </SubmitButton>
                         </div>
                     </Form>
 

@@ -1,9 +1,28 @@
-import { Button } from "react-bootstrap";
+import { Button, Spinner } from "react-bootstrap";
 
-const SubmitButton = ({ children, ...props }) => {
+const SubmitButton = ({
+    loading,
+    loadingMsg = "Submitting",
+    children,
+    ...props
+}) => {
     return (
-        <Button type="submit" {...props}>
-            {children}
+        <Button type="submit" disabled={loading} {...props}>
+            {loading ? (
+                <>
+                    <Spinner
+                        as="span"
+                        animation="border"
+                        size="sm"
+                        role="status"
+                        aria-hidden="true"
+                    />{" "}
+                    {loadingMsg}...
+                    <span className="visually-hidden">{loadingMsg}...</span>
+                </>
+            ) : (
+                children
+            )}
         </Button>
     );
 };

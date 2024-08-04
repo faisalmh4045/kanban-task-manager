@@ -159,3 +159,8 @@ body {
     min-height: 100dvh;
     background-color: #eeeff0;
 }
+
+/* App component */
+.loading-wrapper {
+    min-height: 100dvh;
+}

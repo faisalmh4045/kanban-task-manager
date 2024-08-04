@@ -1,6 +1,7 @@
 import appwriteDbService from "../appwrite/database";
 import { updateTodo } from "../redux/todoSlice";
 import { calculateNewOrder } from "./calculateNewOrder";
+import { toast } from "sonner";
 
 export const handleUpdateTodo = async (
     todo,
@@ -9,6 +10,9 @@ export const handleUpdateTodo = async (
     orderArrays,
     dispatch
 ) => {
+    const toastId = toast.loading("Updating task...");
+    let isUpdated = false;
+
     const prevStatus = todo.status.toLowerCase();
     const newStatus = data.status.toLowerCase();
 
@@ -17,6 +21,7 @@ export const handleUpdateTodo = async (
             ...data,
         });
         if (document) {
+            isUpdated = true;
             dispatch(
                 updateTodo({
                     updatedTodo: document,
@@ -47,6 +52,7 @@ export const handleUpdateTodo = async (
         newTaskOrder.push(todo.$id);
 
         if (document) {
+            isUpdated = true;
             dispatch(
                 updateTodo({
                     updatedTodo: document,
@@ -61,5 +67,15 @@ export const handleUpdateTodo = async (
                 })
             );
         }
+    }
+
+    if (isUpdated) {
+        toast.success("Task updated", {
+            id: toastId,
+        });
+    } else {
+        toast.error("Something went wrong", {
+            id: toastId,
+        });
     }
 };

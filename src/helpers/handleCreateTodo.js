@@ -1,6 +1,7 @@
 import appwriteDbService from "../appwrite/database";
 import { addTodo } from "../redux/todoSlice";
 import { calculateNewOrder } from "./calculateNewOrder";
+import { toast } from "sonner";
 
 export const handleCreateTodo = async (
     data,
@@ -9,6 +10,8 @@ export const handleCreateTodo = async (
     orderArrays,
     dispatch
 ) => {
+    const toastId = toast.loading("Creating new task...");
+
     const orderData = orderArrays[data.status.toLowerCase()];
     const order = calculateNewOrder(todos, orderData, orderData.length);
 
@@ -27,5 +30,13 @@ export const handleCreateTodo = async (
                 newTodoOrder: newOrderData,
             })
         );
+
+        toast.success("Task created successfully", {
+            id: toastId,
+        });
+    } else {
+        toast.error("Something went wrong", {
+            id: toastId,
+        });
     }
 };

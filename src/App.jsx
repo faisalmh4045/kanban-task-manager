@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import authService from "./appwrite/auth";
 import { login, logout } from "./redux/authSlice";
 import { useDispatch } from "react-redux";
+import { Spinner } from "react-bootstrap";
+import { Toaster } from "sonner";
 
 function App() {
     const [loading, setLoading] = useState(true);
@@ -28,7 +30,18 @@ function App() {
         checkUserSession();
     }, [dispatch]);
 
-    return loading ? <div>loading</div> : <Outlet />;
+    return loading ? (
+        <div className="loading-wrapper d-flex justify-content-center align-items-center">
+            <Spinner animation="border" role="status">
+                <span className="visually-hidden">Loading...</span>
+            </Spinner>
+        </div>
+    ) : (
+        <>
+            <Toaster offset="50px" richColors />
+            <Outlet />
+        </>
+    );
 }
 
 export default App;

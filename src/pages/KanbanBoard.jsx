@@ -11,16 +11,18 @@ import {
     handleSameColumnDrag,
 } from "../helpers/dragHandlers";
 import { useEffect } from "react";
+import { toast } from "sonner";
 
 const KanbanBoard = () => {
     const { todos, orderArrays } = useSelector((state) => state.todoList);
     const { userId } = useSelector((state) => state.auth.userSession);
     const dispatch = useDispatch();
 
-    const fetchOrderAdjustedData = async () => {
+    const fetchOrderAdjustedData = async (toastId) => {
         try {
             const todos = await appwriteServerFunctions.getOrderedTodos(userId);
             dispatch(setTodos(todos));
+            toast.dismiss(toastId);
         } catch (error) {
             console.error("KanbanBoard :: Error :", error);
         }
@@ -45,19 +47,21 @@ const KanbanBoard = () => {
         )
             return;
 
+        const toastId = toast.loading("Updating...");
+
         const sourceColumn = orderArrays[source.droppableId];
         const destColumn = orderArrays[destination.droppableId];
         const sourceArr = [...sourceColumn];
         const destinationArr = [...destColumn];
         const [movedTaskId] = sourceArr.splice(source.index, 1);
 
-        let newOrder;
+        let newOrder, isUpdated;
 
         if (source.droppableId === destination.droppableId) {
             newOrder = calculateNewOrder(todos, sourceArr, destination.index);
 
             if (newOrder) {
-                await handleSameColumnDrag(
+                isUpdated = await handleSameColumnDrag(
                     sourceArr,
                     destination.index,
                     movedTaskId,
@@ -75,7 +79,7 @@ const KanbanBoard = () => {
             );
 
             if (newOrder) {
-                await handleDifferentColumnDrag(
+                isUpdated = await handleDifferentColumnDrag(
                     sourceArr,
                     source.droppableId,
                     destinationArr,
@@ -90,10 +94,20 @@ const KanbanBoard = () => {
             }
         }
 
-        if (!newOrder) {
+        if (newOrder) {
+            if (isUpdated) {
+                toast.success("Board updated", {
+                    id: toastId,
+                });
+            } else {
+                toast.error("Something went wrong", {
+                    id: toastId,
+                });
+            }
+        } else {
             const dragInfo = { source, destination, draggableId };
             localStorage.setItem("pendingDragReq", JSON.stringify(dragInfo));
-            fetchOrderAdjustedData();
+            fetchOrderAdjustedData(toastId);
         }
     };
 
