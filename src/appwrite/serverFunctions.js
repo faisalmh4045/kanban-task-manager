@@ -13,7 +13,7 @@ class ServerFunctions {
     }
 
     async getOrderedTodos(userId) {
-        const path = `/?userId=${userId}`;
+        const path = `/?action=reassignOrder&userId=${userId}`;
         try {
             const result = await this.functions.createExecution(
                 conf.appwriteFunctionId,
@@ -34,6 +34,30 @@ class ServerFunctions {
                     responseBody.message
                 );
                 return [];
+            }
+        } catch (error) {
+            console.error("Error calling function:", error);
+        }
+    }
+
+    async deleteUser(userId) {
+        const path = `/?action=deleteUser&userId=${userId}`;
+        try {
+            const result = await this.functions.createExecution(
+                conf.appwriteFunctionId,
+                "",
+                false,
+                path,
+                ExecutionMethod.GET,
+                {}
+            );
+
+            const responseBody = JSON.parse(result.responseBody);
+
+            if (responseBody.success) {
+                console.log("User deleted successfully");
+            } else {
+                console.error(responseBody.message);
             }
         } catch (error) {
             console.error("Error calling function:", error);

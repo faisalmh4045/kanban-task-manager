@@ -1,29 +1,37 @@
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
-import authService from "../appwrite/auth";
-import { logout } from "../redux/authSlice";
+import { useNavigate } from "react-router-dom";
+import appwriteDbService from "../appwrite/database";
 import { Button } from "react-bootstrap";
 import { closeSidebar } from "../redux/sidebarSlice";
-import { deleteTodos } from "../redux/todoSlice";
 import { PiAlignTopLight } from "react-icons/pi";
 import { GoHome } from "react-icons/go";
 import { BsListTask } from "react-icons/bs";
 import { TbProgress } from "react-icons/tb";
 import { GrRedo } from "react-icons/gr";
 import { MdOutlineTaskAlt } from "react-icons/md";
-import { BiLogOutCircle } from "react-icons/bi";
+import { BiUser } from "react-icons/bi";
+import { NavItem, SignOutButton } from "../components";
 
 const Sidebar = () => {
-    const { name, email } = useSelector((state) => state.auth.userSession);
+    const { name, email, prefs } = useSelector(
+        (state) => state.auth.userSession
+    );
     const isopen = useSelector((state) => state.sidebar.isOpen);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const [previewUrl, setPreviewUrl] = useState("");
 
-    const logoutHandler = () => {
-        authService.logout().then(() => {
-            dispatch(logout());
-            dispatch(deleteTodos());
-        });
-    };
+    useEffect(() => {
+        if (prefs.avatar) {
+            const avatarUrl = appwriteDbService.getAvatarPreview(prefs.avatar);
+            if (avatarUrl) {
+                setPreviewUrl(avatarUrl);
+            }
+        } else {
+            setPreviewUrl("/default-avatar.png");
+        }
+    }, [prefs.avatar]);
 
     const iconSize = 22;
 
@@ -65,54 +73,50 @@ const Sidebar = () => {
             <section
                 className={`${
                     isopen ? "sidebar-expand" : "sidebar-collapse"
-                } sidebar d-flex flex-column justify-content-between position-fixed top-0 start-0 bg-white z-3 p-3 overflow-auto border-end`}
+                } sidebar d-flex flex-column justify-content-between 
+                position-fixed top-0 start-0 bg-white z-3 p-3 overflow-auto border-end`}
             >
                 <div>
                     <div className="d-flex align-items-center p-2 rounded mb-5">
                         <div className="w-25 ratio ratio-1x1">
                             <img
                                 className="p-1 rounded-circle"
-                                src="/default-avatar.png"
+                                src={previewUrl}
                                 alt="profile picture"
                             />
                         </div>
                         <div>
                             <span className="ms-2 fs-5">{name}</span>
                             <br />
-                            <small className="ms-2 text-muted">{email}</small>
+                            <small className="ms-2 text-body-secondary">
+                                {email}
+                            </small>
                         </div>
                     </div>
 
                     <ul className="list-unstyled">
                         {navItems.map((item, id) => (
-                            <NavLink
-                                key={id}
-                                to={`${item.path}`}
-                                className={({ isActive }) => {
-                                    return `d-block px-3 py-2 my-2 text-decoration-none text-dark rounded rounded-3 ${
-                                        isActive ? "sidebar-active-link" : ""
-                                    }`;
-                                }}
-                            >
-                                <div>
-                                    <span>{item.icon}</span>
-                                    <span className="ms-3">{item.name}</span>
-                                </div>
-                            </NavLink>
+                            <NavItem key={id} item={item} />
                         ))}
                     </ul>
                 </div>
 
-                <div className="ms-3 mb-3">
-                    <Button
-                        className="d-flex align-items-center border-0 sidebar-signout-btn"
-                        variant="secondary"
-                        size="sm"
-                        onClick={logoutHandler}
-                    >
-                        <BiLogOutCircle size={17} />
-                        <span className="ms-1">Sign Out</span>
-                    </Button>
+                <div>
+                    <div className="ms-3 mb-2">
+                        <Button
+                            className="d-flex align-items-center profile-action-btn"
+                            variant="secondary"
+                            size="sm"
+                            onClick={() => navigate("/profile")}
+                        >
+                            <BiUser size={17} />
+                            <span className="ms-1">Manage Profile</span>
+                        </Button>
+                    </div>
+
+                    <div className="ms-3 mb-3">
+                        <SignOutButton />
+                    </div>
                 </div>
             </section>
             <div

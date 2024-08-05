@@ -12,6 +12,12 @@ import TaskList from "./TaskList";
 import TaskCard from "./TaskCard";
 import TaskForm from "./TaskForm";
 import Board from "./Board/Board";
+import AvatarUploader from "./Profile/AvatarUploader";
+import UserInfoUpdater from "./Profile/UserInfoUpdater";
+import ChangePasswordForm from "./Profile/ChangePasswordForm";
+import DeleteAccountButton from "./Profile/DeleteAccountButton";
+import NavItem from "./NavItem";
+import SignOutButton from "./SignOutButton";
 
 export {
     PrivateRoutes,
@@ -28,4 +34,10 @@ export {
     TaskCard,
     TaskForm,
     Board,
+    AvatarUploader,
+    UserInfoUpdater,
+    ChangePasswordForm,
+    DeleteAccountButton,
+    NavItem,
+    SignOutButton,
 };

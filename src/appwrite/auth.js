@@ -60,6 +60,51 @@ class AuthService {
             return await this.account.deleteSessions();
         } catch (err) {
             console.log("Appwrite authService :: logout :: error", err);
+            throw err;
+        }
+    }
+
+    async updateName(newName) {
+        try {
+            return await this.account.updateName(newName);
+        } catch (err) {
+            console.log("Appwrite authService :: updateName :: error", err);
+            throw err;
+        }
+    }
+
+    async changePassword({ currentPassword, newPassword }) {
+        try {
+            return await this.account.updatePassword(
+                newPassword,
+                currentPassword
+            );
+        } catch (err) {
+            console.log("Appwrite authService :: changePassword :: error", err);
+            throw err;
+        }
+    }
+
+    async updatePreferences(prefs) {
+        try {
+            const userData = await this.account.updatePrefs(prefs);
+            return userData;
+        } catch (err) {
+            console.log(
+                "Appwrite authService :: updatePreferences :: error",
+                err
+            );
+            throw err;
+        }
+    }
+
+    async blockUser() {
+        try {
+            await this.account.updateStatus();
+            return true;
+        } catch (err) {
+            console.log("Appwrite authService :: blockUser :: error", err);
+            throw err;
         }
     }
 }

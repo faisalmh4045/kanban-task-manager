@@ -90,10 +90,6 @@ body {
     background-color: #e0e7ff;
     outline: 1px solid #dbe2ff;
 }
-.sidebar-signout-btn {
-    background-color: #eaebeb;
-    color: rgb(63, 63, 63);
-}
 
 /* Main section */
 .main-container {
@@ -163,4 +159,11 @@ body {
 /* App component */
 .loading-wrapper {
     min-height: 100dvh;
+}
+
+/* Profile page */
+.profile-action-btn {
+    background-color: #eaebeb;
+    color: rgb(63, 63, 63);
+    border: none;
 }

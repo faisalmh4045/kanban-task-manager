@@ -1,15 +1,17 @@
 import conf from "../conf/conf";
-import { Client, Databases, ID, Query } from "appwrite";
+import { Client, Databases, ID, Query, Storage } from "appwrite";
 
 class DatabaseService {
     client = new Client();
     databases;
+    bucket;
 
     constructor() {
         this.client
             .setEndpoint(conf.appwriteUrl)
             .setProject(conf.appwriteProjectId);
         this.databases = new Databases(this.client);
+        this.bucket = new Storage(this.client);
     }
 
     async createTodo({
@@ -93,6 +95,43 @@ class DatabaseService {
         } catch (err) {
             console.log("Appwrite DbService :: getTodos :: error", err);
             throw err;
+        }
+    }
+
+    async uploadFile(file) {
+        try {
+            const result = this.bucket.createFile(
+                conf.appwriteBucketId,
+                ID.unique(),
+                file
+            );
+            return result;
+        } catch (err) {
+            console.log("Appwrite DbService :: uploadFile :: error", err);
+            throw err;
+        }
+    }
+
+    async deleteFile(fileId) {
+        try {
+            await this.bucket.deleteFile(conf.appwriteBucketId, fileId);
+            return true;
+        } catch (err) {
+            console.log("Appwrite DbService :: deleteFile :: error", err);
+            throw err;
+        }
+    }
+
+    getAvatarPreview(fileId) {
+        try {
+            const file = this.bucket.getFilePreview(
+                conf.appwriteBucketId,
+                fileId
+            );
+            return file;
+        } catch (err) {
+            console.log("Appwrite DbService :: getAvatarPreview :: error", err);
+            return null;
         }
     }
 }
