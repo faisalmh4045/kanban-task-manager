@@ -107,6 +107,32 @@ class AuthService {
             throw err;
         }
     }
+
+    async sendResetPasswordLink({ email }) {
+        try {
+            const resetUrl = `${conf.appBaseUrl}/reset-password`;
+            return await this.account.createRecovery(email, resetUrl);
+        } catch (err) {
+            console.log(
+                "Appwrite authService :: sendResetPasswordLink :: error",
+                err
+            );
+            throw err;
+        }
+    }
+
+    async resetPassword({ userId, secret, newPassword }) {
+        try {
+            return await this.account.updateRecovery(
+                userId,
+                secret,
+                newPassword
+            );
+        } catch (err) {
+            console.log("Appwrite authService :: resetPassword :: error", err);
+            throw err;
+        }
+    }
 }
 
 const authService = new AuthService();

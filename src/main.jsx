@@ -12,17 +12,21 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import "./index.css";
 import App from "./App";
-import Homepage from "./pages/Homepage";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
 import { PrivateRoutes } from "./components";
-import AllTasks from "./pages/AllTasks";
-import Todos from "./pages/Todos";
-import Doing from "./pages/Doing";
-import ReviewTask from "./pages/ReviewTask";
-import Completed from "./pages/Completed";
-import Profile from "./pages/Profile";
-import KanbanBoard from "./pages/KanbanBoard";
+import {
+    Homepage,
+    Login,
+    Signup,
+    ForgotPassword,
+    ResetPassword,
+    KanbanBoard,
+    AllTasks,
+    Todos,
+    Doing,
+    ReviewTask,
+    Completed,
+    Profile,
+} from "./pages";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -30,6 +34,8 @@ const router = createBrowserRouter(
             <Route index element={<Homepage />} />
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<Signup />} />
+            <Route path="forgot-password" element={<ForgotPassword />} />
+            <Route path="reset-password" element={<ResetPassword />} />
             <Route path="/*" element={<PrivateRoutes />}>
                 <Route path="board" element={<KanbanBoard />} />
                 <Route path="all-tasks" element={<AllTasks />} />

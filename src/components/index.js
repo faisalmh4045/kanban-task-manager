@@ -2,8 +2,6 @@ import PrivateRoutes from "./PrivateRoutes";
 import Input from "./Input";
 import SubmitButton from "./SubmitButton";
 import Layout from "./Layout";
-import Login from "./Login";
-import Signup from "./Signup";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
 import FilterDropdown from "./FilterDropdown";
@@ -18,14 +16,18 @@ import ChangePasswordForm from "./Profile/ChangePasswordForm";
 import DeleteAccountButton from "./Profile/DeleteAccountButton";
 import NavItem from "./NavItem";
 import SignOutButton from "./SignOutButton";
+import AuthWrapper from "./Auth/AuthWrapper";
+import PageLink from "./Auth/PageLink";
+import FormHeading from "./Auth/FormHeading";
+import LoginForm from "./Auth/LoginForm";
+import SignupForm from "./Auth/SignupForm";
+import ResetPasswordForm from "./Auth/ResetPasswordForm";
 
 export {
     PrivateRoutes,
     Layout,
     Input,
     SubmitButton,
-    Login,
-    Signup,
     Sidebar,
     Topbar,
     FilterDropdown,
@@ -40,4 +42,10 @@ export {
     DeleteAccountButton,
     NavItem,
     SignOutButton,
+    AuthWrapper,
+    PageLink,
+    FormHeading,
+    LoginForm,
+    SignupForm,
+    ResetPasswordForm,
 };
