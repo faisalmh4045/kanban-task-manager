@@ -1,14 +1,11 @@
 import { Button, Card } from "react-bootstrap";
-import { useDispatch } from "react-redux";
-import { openModal } from "../redux/modalSlice";
 import { useLocation } from "react-router-dom";
 import { IoCalendarClearOutline } from "react-icons/io5";
 import { FiEdit } from "react-icons/fi";
 import { AiOutlineDelete } from "react-icons/ai";
 
-const TaskCard = ({ todo, handleDelete }) => {
+const TaskCard = ({ todo }) => {
     const loc = useLocation();
-    const dispatch = useDispatch();
     const date = new Date(todo.date).toDateString().substring(4, 11);
 
     const priorityClass = `${todo.priority.toLowerCase()}-priority`;
@@ -30,39 +27,34 @@ const TaskCard = ({ todo, handleDelete }) => {
                     </span>
                 )}
             </Card.Header>
-            <Card.Body>
+
+            <Card.Body className="pb-2">
                 <Card.Title>{todo.title}</Card.Title>
-                <Card.Text className="text-secondary">
+                <Card.Text className="text-body-secondary">
                     {todo.description}
                 </Card.Text>
             </Card.Body>
+
             <Card.Footer className="bg-white border-0 pt-0">
                 <div className="d-flex justify-content-between">
-                    <span className="d-flex align-items-center text-secondary">
-                        <IoCalendarClearOutline size={20} />
-                        <span className="ms-1 text-black-50">{date}</span>
+                    <span className="d-flex align-items-center text-black-50">
+                        <IoCalendarClearOutline size={19} />
+                        <span className="ms-1">{date}</span>
                     </span>
-                    <div>
+                    <div data-id={todo.$id}>
                         <Button
-                            onClick={() => dispatch(openModal(todo))}
                             variant="warning"
                             className="border-0 edit-task-btn"
                             size="sm"
                         >
-                            <FiEdit size={19} />
+                            <FiEdit size={17} className="pe-none" />
                         </Button>
                         <Button
-                            onClick={() =>
-                                handleDelete({
-                                    id: todo.$id,
-                                    status: todo.status,
-                                })
-                            }
                             variant="danger"
                             className="border-0 ms-1 delete-task-btn"
                             size="sm"
                         >
-                            <AiOutlineDelete size={20} />
+                            <AiOutlineDelete size={20} className="pe-none" />
                         </Button>
                     </div>
                 </div>

@@ -2,6 +2,17 @@ import appwriteDbService from "../appwrite/database";
 import { deleteTodo } from "../redux/todoSlice";
 import { toast } from "sonner";
 
+const updateTodoOrder = (orderData, id) => {
+    const newTaskOrder = [...orderData];
+
+    const index = newTaskOrder.indexOf(id);
+    if (index !== -1) {
+        newTaskOrder.splice(index, 1);
+    }
+
+    return newTaskOrder;
+};
+
 export const handleDeleteTodo = async ({
     id,
     status,
@@ -14,27 +25,24 @@ export const handleDeleteTodo = async ({
 
     const toastId = toast.loading("Deleting task...");
 
-    const isDeleted = await appwriteDbService.deleteTodo(id);
+    try {
+        const isDeleted = await appwriteDbService.deleteTodo(id);
 
-    if (isDeleted) {
-        const orderData = orderArrays[status.toLowerCase()];
-        const newTaskOrder = [...orderData];
+        if (isDeleted) {
+            const todoOrder = updateTodoOrder(orderArrays[status], id);
 
-        const index = newTaskOrder.indexOf(id);
-        if (index !== -1) {
-            newTaskOrder.splice(index, 1);
+            dispatch(
+                deleteTodo({
+                    deletedTodo: { id, status },
+                    newTodoOrder: todoOrder,
+                })
+            );
+
+            toast.warning("Task deleted", {
+                id: toastId,
+            });
         }
-        dispatch(
-            deleteTodo({
-                deletedTodo: { id, status },
-                newTodoOrder: newTaskOrder,
-            })
-        );
-
-        toast.warning("Task deleted", {
-            id: toastId,
-        });
-    } else {
+    } catch (err) {
         toast.error("Something went wrong", {
             id: toastId,
         });

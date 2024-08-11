@@ -24,7 +24,7 @@ class DatabaseService {
         userId,
     }) {
         try {
-            const result = await this.databases.createDocument(
+            const document = await this.databases.createDocument(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId,
                 ID.unique(),
@@ -38,10 +38,10 @@ class DatabaseService {
                     userId,
                 }
             );
-            return result;
+            return document;
         } catch (err) {
             console.log("Appwrite DbService :: createTodo :: error", err);
-            return false;
+            throw err;
         }
     }
 
@@ -50,7 +50,7 @@ class DatabaseService {
         { title, description, date, status, priority, order }
     ) {
         try {
-            const result = await this.databases.updateDocument(
+            const document = await this.databases.updateDocument(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId,
                 id,
@@ -63,10 +63,10 @@ class DatabaseService {
                     order,
                 }
             );
-            return result;
+            return document;
         } catch (err) {
             console.log("Appwrite DbService :: updateTodo :: error", err);
-            return false;
+            throw err;
         }
     }
 
@@ -80,7 +80,7 @@ class DatabaseService {
             return true;
         } catch (err) {
             console.log("Appwrite DbService :: deleteTodo :: error", err);
-            return false;
+            throw err;
         }
     }
 

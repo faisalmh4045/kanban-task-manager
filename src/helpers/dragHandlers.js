@@ -2,15 +2,15 @@ import appwriteDbService from "../appwrite/database";
 import { updateTodo } from "../redux/todoSlice";
 
 export const handleSameColumnDrag = async (
-    sourceArr,
-    destinationIndex,
+    srcArr,
+    destIndex,
     movedTaskId,
     todos,
     draggableId,
     newOrder,
     dispatch
 ) => {
-    sourceArr.splice(destinationIndex, 0, movedTaskId);
+    srcArr.splice(destIndex, 0, movedTaskId);
     const todo = todos[draggableId];
     const updatedTodo = { ...todo, order: newOrder };
 
@@ -19,7 +19,7 @@ export const handleSameColumnDrag = async (
             updatedTodo: updatedTodo,
             prevOrder: {
                 prevStatus: updatedTodo.status,
-                prevTaskOrder: sourceArr,
+                prevTaskOrder: srcArr,
             },
             newOrder: null,
         })
@@ -31,37 +31,35 @@ export const handleSameColumnDrag = async (
 };
 
 export const handleDifferentColumnDrag = async (
-    sourceArr,
-    sourceDroppableId,
-    destinationArr,
-    destinationDroppableId,
-    destinationIndex,
+    srcArr,
+    srcDroppableId,
+    destArr,
+    destDroppableId,
+    destIndex,
     movedTaskId,
     todos,
     draggableId,
     newOrder,
     dispatch
 ) => {
-    destinationArr.splice(destinationIndex, 0, movedTaskId);
+    destArr.splice(destIndex, 0, movedTaskId);
     const todo = todos[draggableId];
     const updatedTodo = {
         ...todo,
         order: newOrder,
-        status:
-            destinationDroppableId.charAt(0).toUpperCase() +
-            destinationDroppableId.slice(1),
+        status: destDroppableId,
     };
 
     dispatch(
         updateTodo({
             updatedTodo: updatedTodo,
             prevOrder: {
-                prevStatus: sourceDroppableId,
-                prevTaskOrder: sourceArr,
+                prevStatus: srcDroppableId,
+                prevTaskOrder: srcArr,
             },
             newOrder: {
-                newStatus: destinationDroppableId,
-                newTaskOrder: destinationArr,
+                newStatus: destDroppableId,
+                newTaskOrder: destArr,
             },
         })
     );

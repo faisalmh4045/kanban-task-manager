@@ -16,6 +16,7 @@ const AvatarUploader = ({ prefs }) => {
     const [previewUrl, setPreviewUrl] = useState("");
     const [initialAvatar, setInitialAvatar] = useState("");
     const [loading, setLoading] = useState(false);
+    const MAX_FILE_SIZE_BYTES = 1048576; // 1MB
 
     useEffect(() => {
         if (prefs.avatar) {
@@ -32,7 +33,14 @@ const AvatarUploader = ({ prefs }) => {
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
+
         if (file) {
+            if (file.size > MAX_FILE_SIZE_BYTES) {
+                toast.error("File size exceeds the 1MB limit.");
+                fileInputRef.current.value = "";
+                return;
+            }
+
             setSelectedFile(file);
             setPreviewUrl(URL.createObjectURL(file));
         }

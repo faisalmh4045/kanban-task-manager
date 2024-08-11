@@ -12,21 +12,21 @@ export const handleCreateTodo = async (
 ) => {
     const toastId = toast.loading("Creating new task...");
 
-    const orderData = orderArrays[data.status.toLowerCase()];
+    const orderData = orderArrays[data.status];
     const order = calculateNewOrder(todos, orderData, orderData.length);
 
-    const document = await appwriteDbService.createTodo({
-        ...data,
-        order,
-        userId,
-    });
+    try {
+        const todo = await appwriteDbService.createTodo({
+            ...data,
+            order,
+            userId,
+        });
 
-    if (document) {
-        const newOrderData = [...orderData, document.$id];
+        const newOrderData = [...orderData, todo.$id];
 
         dispatch(
             addTodo({
-                newTodo: document,
+                newTodo: todo,
                 newTodoOrder: newOrderData,
             })
         );
@@ -34,7 +34,7 @@ export const handleCreateTodo = async (
         toast.success("Task created successfully", {
             id: toastId,
         });
-    } else {
+    } catch (err) {
         toast.error("Something went wrong", {
             id: toastId,
         });

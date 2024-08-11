@@ -2,8 +2,7 @@ import { Modal } from "react-bootstrap";
 import "react-datepicker/dist/react-datepicker.css";
 import { useDispatch, useSelector } from "react-redux";
 import { TaskForm } from "./index";
-import { handleCreateTodo } from "../helpers/handleCreateTodo";
-import { handleUpdateTodo } from "../helpers/handleUpdateTodo";
+import { handleCreateTodo, handleUpdateTodo } from "../helpers";
 
 const TaskModal = (props) => {
     const todos = useSelector((state) => state.todoList.todos);

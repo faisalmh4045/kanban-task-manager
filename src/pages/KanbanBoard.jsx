@@ -1,16 +1,15 @@
+import { useEffect } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import { useSelector } from "react-redux";
 import appwriteServerFunctions from "../appwrite/serverFunctions";
-import { Board } from "../components";
 import { useDispatch } from "react-redux";
 import { setTodos } from "../redux/todoSlice";
-import { handleDeleteTodo } from "../helpers/handleDeleteTodo";
-import { calculateNewOrder } from "../helpers/calculateNewOrder";
+import { Board } from "../components";
 import {
-    handleDifferentColumnDrag,
+    calculateNewOrder,
     handleSameColumnDrag,
-} from "../helpers/dragHandlers";
-import { useEffect } from "react";
+    handleDifferentColumnDrag,
+} from "../helpers";
 import { toast } from "sonner";
 
 const KanbanBoard = () => {
@@ -18,7 +17,15 @@ const KanbanBoard = () => {
     const { userId } = useSelector((state) => state.auth.userSession);
     const dispatch = useDispatch();
 
-    const fetchOrderAdjustedData = async (toastId) => {
+    const handleDragConflict = async (
+        source,
+        destination,
+        draggableId,
+        toastId
+    ) => {
+        const dragInfo = { source, destination, draggableId };
+        localStorage.setItem("pendingDragReq", JSON.stringify(dragInfo));
+
         try {
             const todos = await appwriteServerFunctions.getOrderedTodos(userId);
             dispatch(setTodos(todos));
@@ -27,16 +34,6 @@ const KanbanBoard = () => {
             console.error("KanbanBoard :: Error :", error);
         }
     };
-
-    useEffect(() => {
-        const pendingDragReq = JSON.parse(
-            localStorage.getItem("pendingDragReq")
-        );
-        if (pendingDragReq) {
-            handleOnDragEnd(pendingDragReq);
-            localStorage.removeItem("pendingDragReq");
-        }
-    });
 
     const handleOnDragEnd = async ({ source, destination, draggableId }) => {
         if (!destination) return;
@@ -51,18 +48,18 @@ const KanbanBoard = () => {
 
         const sourceColumn = orderArrays[source.droppableId];
         const destColumn = orderArrays[destination.droppableId];
-        const sourceArr = [...sourceColumn];
-        const destinationArr = [...destColumn];
-        const [movedTaskId] = sourceArr.splice(source.index, 1);
+        const srcArr = [...sourceColumn];
+        const destArr = [...destColumn];
+        const [movedTaskId] = srcArr.splice(source.index, 1);
 
         let newOrder, isUpdated;
 
         if (source.droppableId === destination.droppableId) {
-            newOrder = calculateNewOrder(todos, sourceArr, destination.index);
+            newOrder = calculateNewOrder(todos, srcArr, destination.index);
 
             if (newOrder) {
                 isUpdated = await handleSameColumnDrag(
-                    sourceArr,
+                    srcArr,
                     destination.index,
                     movedTaskId,
                     todos,
@@ -72,17 +69,13 @@ const KanbanBoard = () => {
                 );
             }
         } else {
-            newOrder = calculateNewOrder(
-                todos,
-                destinationArr,
-                destination.index
-            );
+            newOrder = calculateNewOrder(todos, destArr, destination.index);
 
             if (newOrder) {
                 isUpdated = await handleDifferentColumnDrag(
-                    sourceArr,
+                    srcArr,
                     source.droppableId,
-                    destinationArr,
+                    destArr,
                     destination.droppableId,
                     destination.index,
                     movedTaskId,
@@ -105,21 +98,23 @@ const KanbanBoard = () => {
                 });
             }
         } else {
-            const dragInfo = { source, destination, draggableId };
-            localStorage.setItem("pendingDragReq", JSON.stringify(dragInfo));
-            fetchOrderAdjustedData(toastId);
+            handleDragConflict(source, destination, draggableId, toastId);
         }
     };
 
+    useEffect(() => {
+        const pendingDragReq = JSON.parse(
+            localStorage.getItem("pendingDragReq")
+        );
+        if (pendingDragReq) {
+            handleOnDragEnd(pendingDragReq);
+            localStorage.removeItem("pendingDragReq");
+        }
+    });
+
     return (
         <DragDropContext onDragEnd={handleOnDragEnd}>
-            <Board
-                orderArrays={orderArrays}
-                todoMap={todos}
-                handleDeleteTodo={({ id, status }) =>
-                    handleDeleteTodo({ id, status, dispatch, orderArrays })
-                }
-            />
+            <Board orderArrays={orderArrays} todoMap={todos} />
         </DragDropContext>
     );
 };

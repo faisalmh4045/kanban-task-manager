@@ -13,25 +13,19 @@ export const todoSlice = createSlice({
             const todos = action.payload;
 
             const todoMap = {};
-            todos.forEach((todo) => {
-                todoMap[todo.$id] = todo;
-            });
-
-            state.todos = todoMap;
-
             const statusCategories = {
-                todo: [],
-                doing: [],
-                review: [],
-                completed: [],
+                Todo: [],
+                Doing: [],
+                Review: [],
+                Completed: [],
             };
 
             todos.forEach((todo) => {
-                if (todo.status.toLowerCase() in statusCategories) {
-                    statusCategories[todo.status.toLowerCase()].push(todo.$id);
-                }
+                todoMap[todo.$id] = todo;
+                statusCategories[todo.status].push(todo.$id);
             });
 
+            state.todos = todoMap;
             state.orderArrays = statusCategories;
         },
 
@@ -39,7 +33,7 @@ export const todoSlice = createSlice({
             const { newTodo, newTodoOrder } = action.payload;
 
             state.todos[newTodo.$id] = newTodo;
-            state.orderArrays[newTodo.status.toLowerCase()] = newTodoOrder;
+            state.orderArrays[newTodo.status] = newTodoOrder;
         },
 
         updateTodo: (state, action) => {
@@ -47,15 +41,14 @@ export const todoSlice = createSlice({
 
             if (updatedTodo) state.todos[updatedTodo.$id] = updatedTodo;
 
-            if (prevOrder && newOrder) {
+            if (prevOrder) {
                 const { prevStatus, prevTaskOrder } = prevOrder;
-                state.orderArrays[prevStatus.toLowerCase()] = prevTaskOrder;
+                state.orderArrays[prevStatus] = prevTaskOrder;
+            }
 
+            if (newOrder) {
                 const { newStatus, newTaskOrder } = newOrder;
-                state.orderArrays[newStatus.toLowerCase()] = newTaskOrder;
-            } else if (prevOrder) {
-                const { prevStatus, prevTaskOrder } = prevOrder;
-                state.orderArrays[prevStatus.toLowerCase()] = prevTaskOrder;
+                state.orderArrays[newStatus] = newTaskOrder;
             }
         },
 
@@ -63,7 +56,7 @@ export const todoSlice = createSlice({
             const { deletedTodo, newTodoOrder } = action.payload;
 
             delete state.todos[deletedTodo.id];
-            state.orderArrays[deletedTodo.status.toLowerCase()] = newTodoOrder;
+            state.orderArrays[deletedTodo.status] = newTodoOrder;
         },
 
         deleteTodos: (state) => {
